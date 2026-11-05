@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MO_PHONG_QUY_TRINH</title>
+<!-- Simple technical font: system monospace stack, no webfont -->
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --paper:#eaeae3;
+  --paper-hi:#f1f1ea;
+  --ink:#131311;
+  --gray:#c7c7bd;
+  --gray-soft:#d8d8cf;
+  --line:#a3a398;
+  --mid:#83837a;
+}
+html,body{height:100%}
+body{
+  font-family:Consolas,"Courier New",monospace;
+  background:var(--paper);
+  color:var(--ink);
+  min-height:100vh;
+  display:flex;flex-direction:column;
+  padding:26px clamp(18px,4.5vw,54px) 22px;
+  position:relative;overflow-x:hidden;
+}
+/* --- Large pale geometric backdrop, like the poster's grey letterforms --- */
+.bg{position:fixed;inset:0;pointer-events:none;z-index:0}
+.bg svg{width:100%;height:100%;display:block}
+/* --- Scattered technical marks --- */
+.mark{position:fixed;z-index:0;font-family:Consolas,"Courier New",monospace;color:var(--ink);pointer-events:none;line-height:1}
+.mark.plus{font-size:17px;font-weight:700}
+.mark.sq{width:6px;height:6px;border:1.5px solid var(--ink)}
+.mark.dots{font-size:13px;letter-spacing:2px;color:var(--mid)}
+.mark.corner{width:16px;height:16px;border:0 solid var(--line)}
+/* --- Top module strip, copied from the poster's header --- */
+header{position:relative;z-index:2}
+.mods{display:grid;grid-template-columns:1fr 1fr 1fr;gap:clamp(14px,4vw,44px)}
+.mod{font-family:Consolas,"Courier New",monospace;text-transform:uppercase}
+.mod-top{display:flex;justify-content:space-between;gap:8px;font-size:8px;letter-spacing:.14em;color:var(--mid);border-top:1.5px solid var(--ink);padding-top:5px}
+.mod-bars{margin:7px 0 6px;display:flex;flex-direction:column;gap:3px}
+.mod-bars i{display:block;height:2.5px;background:var(--ink)}
+.mod-name{font-size:9px;letter-spacing:.2em;text-align:center}
+header .rule{height:5px;border-top:2.5px solid var(--ink);border-bottom:1px solid var(--ink);margin-top:9px}
+/* --- Centre stage --- */
+main{
+  position:relative;z-index:2;flex:1;
+  display:flex;align-items:center;justify-content:center;
+  padding:18px 0;gap:0;
+}
+.side{
+  width:168px;flex:none;font-family:Consolas,"Courier New",monospace;
+  font-size:8px;line-height:1.9;letter-spacing:.08em;color:var(--mid);
+  text-transform:uppercase;
+}
+.side b{color:var(--ink);font-weight:700}
+.side.right{text-align:left;margin-left:34px}
+.side.left{margin-right:34px}
+.side .blk{border-top:1px solid var(--line);padding-top:7px;margin-top:7px}
+@media (max-width:900px){.side{display:none}}
+.col{display:flex;flex-direction:column;gap:18px;width:100%;max-width:520px}
+/* --- App button: black technical module --- */
+a.btn{
+  position:relative;display:block;text-decoration:none;color:var(--ink);
+  background:var(--paper-hi);
+  border:2px solid var(--ink);
+  transition:transform .16s ease, box-shadow .16s ease;
+}
+a.btn:hover,a.btn:focus-visible{
+  transform:translate(-3px,-3px);
+  box-shadow:7px 7px 0 var(--ink);
+  outline:none;
+}
+a.btn:active{transform:translate(0,0);box-shadow:2px 2px 0 var(--ink)}
+.btn-head{
+  display:flex;justify-content:space-between;gap:10px;
+  background:var(--ink);color:var(--paper);
+  font-family:Consolas,"Courier New",monospace;font-size:8px;letter-spacing:.22em;text-transform:uppercase;
+  padding:2px 12px;line-height:1.2;
+}
+.btn-body{display:flex;align-items:stretch;height:90px;overflow:hidden}
+.wave{flex:none;width:52px;background:var(--ink);margin:3px 0 3px 10px}
+.wave svg{width:100%;height:100%;display:block}
+.btn-text{flex:1;padding:4px 14px;min-width:0;display:flex;flex-direction:column;justify-content:center;align-items:flex-start}
+.btn-kicker{
+  font-family:Consolas,"Courier New",monospace;font-size:8px;letter-spacing:.22em;
+  text-transform:uppercase;color:var(--mid);display:block;margin-bottom:2px;line-height:1.2;
+}
+.btn-title{
+  display:block;font-size:16px;font-weight:700;letter-spacing:.02em;
+  text-transform:uppercase;line-height:1;
+}
+.btn-sub{
+  display:block;font-family:Consolas,"Courier New",monospace;font-size:9px;
+  letter-spacing:.16em;text-transform:uppercase;color:var(--mid);margin-top:2px;line-height:1.2;
+}
+.btn-open{
+  display:inline-block;margin-top:4px;
+  font-family:Consolas,"Courier New",monospace;font-size:10px;font-weight:700;
+  letter-spacing:.14em;text-transform:uppercase;color:var(--paper);
+  background:var(--ink);padding:3px 12px;line-height:1.2;
+  transition:transform .16s ease;
+}
+a.btn:hover .btn-open{transform:translateX(3px)}
+.btn-vert{
+  flex:none;writing-mode:vertical-rl;
+  font-family:Consolas,"Courier New",monospace;font-size:8px;font-weight:700;
+  letter-spacing:.1em;text-transform:uppercase;
+  padding:0 9px;border-left:1px solid var(--gray);
+  display:flex;align-items:center;justify-content:center;
+}
+/* --- Bottom strip, copied from the poster's footer --- */
+footer{position:relative;z-index:2;font-family:Consolas,"Courier New",monospace}
+footer .rule{height:5px;border-bottom:2.5px solid var(--ink);border-top:1px solid var(--ink);margin-bottom:9px}
+.foot-row{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.barcode{
+  flex:none;width:96px;height:20px;
+  background:
+    repeating-linear-gradient(90deg, var(--ink) 0 2px, transparent 2px 5px),
+    repeating-linear-gradient(90deg, var(--ink) 0 5px, transparent 5px 13px);
+  background-blend-mode:multiply;
+}
+.ao{
+  flex:none;background:var(--ink);color:var(--paper);
+  font-weight:700;font-size:11px;padding:5px 9px;letter-spacing:.08em;
+}
+.foot-hazard{
+  flex:1;min-width:60px;height:10px;
+  background:repeating-linear-gradient(-45deg, var(--ink) 0 6px, transparent 6px 12px);
+}
+.foot-note{font-size:8px;letter-spacing:.18em;text-transform:uppercase;color:var(--mid)}
+.qrs{flex:none;display:flex;gap:7px}
+.qrs svg{width:24px;height:24px;display:block}
+@media (max-width:520px){
+  .btn-body{height:auto;min-height:90px}
+  .btn-title{font-size:14px}
+  .wave{width:38px}
+  .btn-vert{display:none}
+  .foot-note{display:none}
+}
+@media (prefers-reduced-motion: reduce){a.btn,.btn-open{transition:none}}
+</style>
+</head>
+<body>
+<div class="bg" aria-hidden="true">
+<svg viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid slice">
+  <text x="120" y="560" font-family="Consolas, Courier New, monospace" font-weight="900" font-size="560" fill="#dcdcd2">0</text>
+  <text x="640" y="600" font-family="Consolas, Courier New, monospace" font-weight="900" font-size="560" fill="#cfcfc4">1</text>
+  <polygon points="880,60 1060,60 960,300 880,300" fill="#c7c7bd" opacity=".55"/>
+  <polygon points="60,600 300,600 220,760 60,760" fill="#c7c7bd" opacity=".5"/>
+  <g fill="none" stroke="#a3a398" stroke-width="1.4">
+    <path d="M180 190 H330 L380 240 V330"/>
+    <path d="M1020 210 H880 L830 260 V350"/>
+    <path d="M240 640 H400 L450 590"/>
+    <path d="M960 620 H820 L770 570"/>
+    <path d="M90 420 H210"/>
+    <path d="M990 430 H1110"/>
+  </g>
+  <g fill="none" stroke="#a3a398" stroke-width="1.2">
+    <rect x="176" y="186" width="7" height="7"/>
+    <rect x="1024" y="206" width="7" height="7"/>
+    <rect x="236" y="636" width="7" height="7"/>
+    <rect x="964" y="616" width="7" height="7"/>
+  </g>
+</svg>
+</div>
+<span class="mark plus" style="left:2.2%;top:47%">+</span>
+<span class="mark plus" style="right:2.2%;top:39%">+</span>
+<span class="mark dots" style="left:6%;top:24%">:<br>:</span>
+<span class="mark dots" style="right:6%;top:63%">:<br>:</span>
+<span class="mark corner" style="left:8%;top:17%;border-top:1.5px solid #a3a398;border-left:1.5px solid #a3a398"></span>
+<span class="mark corner" style="right:8%;top:17%;border-top:1.5px solid #a3a398;border-right:1.5px solid #a3a398"></span>
+<span class="mark corner" style="left:8%;bottom:15%;border-bottom:1.5px solid #a3a398;border-left:1.5px solid #a3a398"></span>
+<span class="mark corner" style="right:8%;bottom:15%;border-bottom:1.5px solid #a3a398;border-right:1.5px solid #a3a398"></span>
+
+<header aria-hidden="true">
+  <div class="mods">
+    <div class="mod">
+      <div class="mod-top"><span>&#8226;&#8226;&#8226;&#8226;&#8226;</span><span>Unit_001</span></div>
+      <div class="mod-bars"><i style="width:64%"></i><i style="width:38%"></i></div>
+      <div class="mod-name">Module_01</div>
+    </div>
+    <div class="mod">
+      <div class="mod-top"><span>&#8226;&#8226;&#8226;&#8226;&#8226;</span><span>Unit_002</span></div>
+      <div class="mod-bars"><i style="width:46%"></i><i style="width:70%"></i></div>
+      <div class="mod-name">Module_02</div>
+    </div>
+    <div class="mod">
+      <div class="mod-top"><span>&#8226;&#8226;&#8226;&#8226;&#8226;</span><span>Unit_003</span></div>
+      <div class="mod-bars"><i style="width:58%"></i><i style="width:30%"></i></div>
+      <div class="mod-name">Module_03</div>
+    </div>
+  </div>
+  <div class="rule"></div>
+</header>
+
+<main>
+  <aside class="side left" aria-hidden="true">
+    <b>Sys.Index</b> — 01<br>
+    Access — Open<br>
+    Type — Simulation
+    <div class="blk">Ref / W01<br>Sheet — A0<br>Scale — 1:1</div>
+  </aside>
+
+  <div class="col">
+    <a class="btn" href="mo-phong-workflow-n8n.html">
+      <span class="btn-head"><span>MO_PHONG_QUY_TRINH // Hub</span><span>Unit_W01</span></span>
+      <span class="btn-body">
+        <span class="wave" aria-hidden="true">
+          <svg viewBox="0 0 64 160" preserveAspectRatio="none">
+            <g fill="none" stroke="#eaeae3" stroke-width="2.4">
+              <path d="M8 0 C 20 26, -4 52, 8 80 C 20 106, -4 132, 8 160"/>
+              <path d="M22 0 C 34 26, 10 52, 22 80 C 34 106, 10 132, 22 160"/>
+              <path d="M36 0 C 48 26, 24 52, 36 80 C 48 106, 24 132, 36 160"/>
+              <path d="M50 0 C 62 26, 38 52, 50 80 C 62 106, 38 132, 50 160"/>
+              <path d="M62 0 C 72 26, 52 52, 62 80 C 72 106, 52 132, 62 160"/>
+            </g>
+          </svg>
+        </span>
+        <span class="btn-text">
+          <span class="btn-kicker">Element // 01 — Online</span>
+          <span class="btn-title">MO_PHONG_QUY_TRINH</span>
+          <span class="btn-sub">Workflow Simulation Unit</span>
+          <span class="btn-open">Start here &gt;&gt;</span>
+        </span>
+        <span class="btn-vert" aria-hidden="true">Simulation</span>
+      </span>
+    </a>
+  </div>
+
+  <aside class="side right" aria-hidden="true">
+    <b>Output</b> — HTML<br>
+    Status — Active<br>
+    Link — Local File
+    <div class="blk">Rev / 03<br>Grid — Tech<br>Tone — Mono</div>
+  </aside>
+</main>
+
+<footer aria-hidden="true">
+  <div class="rule"></div>
+  <div class="foot-row">
+    <span class="barcode"></span>
+    <span class="ao">A0</span>
+    <span class="foot-hazard"></span>
+    <span class="foot-note">Index — App / Present</span>
+    <span class="foot-hazard"></span>
+    <span class="foot-note">Rev / 03 — Homepage</span>
+    <span class="qrs">
+      <svg viewBox="0 0 24 24"><rect width="24" height="24" fill="#eaeae3"/><g fill="#131311"><path d="M1 1h8v8H1zM3 3v4h4V3z" fill-rule="evenodd"/><rect x="4" y="4" width="2" height="2"/><path d="M15 1h8v8h-8zM17 3v4h4V3z" fill-rule="evenodd"/><rect x="18" y="4" width="2" height="2"/><path d="M1 15h8v8H1zM3 17v4h4v-4z" fill-rule="evenodd"/><rect x="4" y="18" width="2" height="2"/><rect x="12" y="12" width="3" height="3"/><rect x="18" y="13" width="2" height="2"/><rect x="13" y="18" width="2" height="2"/><rect x="19" y="19" width="3" height="3"/><rect x="12" y="3" width="2" height="2"/></g></svg>
+      <svg viewBox="0 0 24 24"><rect width="24" height="24" fill="#eaeae3"/><g fill="#131311"><path d="M1 1h8v8H1zM3 3v4h4V3z" fill-rule="evenodd"/><rect x="4" y="4" width="2" height="2"/><path d="M15 1h8v8h-8zM17 3v4h4V3z" fill-rule="evenodd"/><rect x="18" y="4" width="2" height="2"/><path d="M1 15h8v8H1zM3 17v4h4v-4z" fill-rule="evenodd"/><rect x="4" y="18" width="2" height="2"/><rect x="13" y="13" width="2" height="2"/><rect x="18" y="17" width="3" height="2"/><rect x="12" y="20" width="2" height="2"/><rect x="20" y="11" width="2" height="3"/><rect x="3" y="12" width="3" height="2"/></g></svg>
+    </span>
+  </div>
+</footer>
+</body>
+</html>
