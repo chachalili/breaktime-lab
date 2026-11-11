@@ -114,6 +114,7 @@ mark{background:var(--mark);color:inherit;border-radius:2px;padding:0 1px}
 .detail .dso{font-size:13px;font-weight:700;color:var(--accent);font-variant-numeric:tabular-nums}
 .detail h2{font-family:var(--f-read);font-size:20px;line-height:1.4;margin:4px 0 10px}
 .kv{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px 16px;margin:12px 0}
+.kv.kv3{grid-template-columns:repeat(3,1fr)}
 .kv div{min-width:0}
 .kv dt{font-size:11.5px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
 .kv dd{margin:2px 0 0;font-size:14px;overflow-wrap:anywhere}
@@ -133,6 +134,8 @@ mark{background:var(--mark);color:inherit;border-radius:2px;padding:0 1px}
 .srcrow a{overflow-wrap:anywhere}
 .empty{padding:28px 20px;text-align:center;color:var(--muted);font-size:14px;background:var(--surface);border:1px dashed var(--line);border-radius:var(--r)}
 .empty b{display:block;color:var(--fg);font-size:15px;margin-bottom:4px}
+.lib-head{display:flex;align-items:baseline;justify-content:space-between;gap:16px}
+.lib-total{font-size:14px;font-weight:400;color:var(--muted);white-space:nowrap;font-variant-numeric:tabular-nums}
 .libgrid{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:8px;margin:14px 0 20px}
 .libcard{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:10px 12px;color:var(--fg);display:block;min-width:0}
 .libcard b{display:block;font-size:13.5px;line-height:1.35;overflow-wrap:anywhere}
@@ -225,8 +228,8 @@ footer .wrap{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
 <header class="top">
   <div class="wrap">
     <nav class="tabs" role="tablist" aria-label="Mục chính">
-      <button role="tab" id="tabbtn-search" aria-selected="true" data-tab="search">Tra cứu</button>
-      <button role="tab" id="tabbtn-update" aria-selected="false" data-tab="update">Cập nhật</button>
+      <button role="tab" id="tabbtn-update" aria-selected="true" data-tab="update">Tin mới</button>
+      <button role="tab" id="tabbtn-search" aria-selected="false" data-tab="search">Tra cứu</button>
       <button role="tab" id="tabbtn-lib" aria-selected="false" data-tab="lib">Kho văn bản</button>
     </nav>
     <div class="spacer"></div>
@@ -238,7 +241,7 @@ footer .wrap{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
 
 <main class="wrap">
   <!-- ============ TRA CỨU ============ -->
-  <section class="panel" id="panel-search" role="tabpanel" aria-labelledby="tabbtn-search">
+  <section class="panel" id="panel-search" role="tabpanel" aria-labelledby="tabbtn-search" hidden>
     <div class="search-head">
       <div class="head-text">
         <h1>Thư viện văn bản xây dựng</h1>
@@ -281,7 +284,10 @@ footer .wrap{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
 
   <!-- ============ KHO VĂN BẢN ============ -->
   <section class="panel" id="panel-lib" role="tabpanel" aria-labelledby="tabbtn-lib" hidden>
-    <h2 style="font-size:22px">Kho văn bản</h2>
+    <div class="lib-head">
+      <h2 style="font-size:22px">Kho văn bản</h2>
+      <span class="lib-total" id="libTotal"></span>
+    </div>
     <div class="filters" id="libDotBar" hidden style="margin:0 0 10px">
       <span class="note" id="libDotLabel"></span>
       <button type="button" class="chip" id="libDotClear">Bỏ lọc theo đợt</button>
@@ -298,7 +304,7 @@ footer .wrap{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
   </section>
 
   <!-- ============ CẬP NHẬT ============ -->
-  <section class="panel" id="panel-update" role="tabpanel" aria-labelledby="tabbtn-update" hidden>
+  <section class="panel" id="panel-update" role="tabpanel" aria-labelledby="tabbtn-update">
     <h2 style="font-size:22px">Tin văn bản mới</h2>
     <div class="news-filters" role="group" aria-label="Lọc tin văn bản mới">
       <span id="newsTypeChips" style="display:contents"></span>
@@ -606,11 +612,9 @@ function renderDetail(){
   h+='<span class="dso">'+esc(v.so)+'</span><h2>'+esc(v.ten)+"</h2>";
   h+='<div style="display:flex;gap:6px;flex-wrap:wrap"><span class="tag">'+esc(v.loai)+"</span>"+statusChip(v,g)+'<span class="tag">'+esc(v.lv)+"</span>"
     +(v.dp&&v.dp!=="Toàn quốc"?'<span class="tag acc">'+esc(v.dp)+"</span>":"")+"</div>";
-  h+='<dl class="kv">'
-    +kv("Số hiệu nguyên văn",v.so)+kv("Cơ quan ban hành",v.coquan)
+  h+='<dl class="kv kv3">'
+    +kv("Cơ quan ban hành",v.coquan)
     +kv("Ngày ban hành",fmtDate(v.nbh))+kv("Ngày hiệu lực",v.nhl?fmtDate(v.nhl):"")
-    +kv("Loại công trình",v.lct)+kv("Ngày kiểm tra",fmtDate(v.nkt))
-    
     +"</dl>";
   h+='<div><dt style="font-size:11.5px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.05em">Tình trạng hiệu lực (ghi đầy đủ)</dt><p style="margin:3px 0 0">'+esc(v.tt)+"</p></div>";
   if(v.tk)h+='<p class="note" style="margin-top:8px">Từ khóa: '+esc(v.tk)+"</p>";
@@ -797,6 +801,7 @@ function soInnerHtml(so){
   return '<span class="so-top">'+esc(m[1].trim())+'</span><span class="so-bot">'+esc(m[2].trim())+'</span>';
 }
 function renderLib(){
+  $("libTotal").textContent=VB.length+" văn bản";
   var list=VB.filter(function(v){
     if(libDot&&v.dot!==libDot)return false;
     return true;
@@ -1026,7 +1031,6 @@ $("libDotClear").addEventListener("click",function(){libDot="";renderLib();});
       return a.i-b.i;
     }).map(function(x){return x.n;});
     $("newsList").innerHTML=list.map(function(n){
-      var tgt=newsTarget(n);
       var meta=[];
       if(n.bh)meta.push("Ban hành "+n.bh);
       if(n.hl)meta.push("Hiệu lực từ "+n.hl);
@@ -1053,15 +1057,11 @@ $("libDotClear").addEventListener("click",function(){libDot="";renderLib();});
         }).join(" · ")+"</p>";
       }
       var acts="";
-      if(tgt)acts+='<button type="button" class="btn" data-newsgo="'+esc(tgt.ma)+'">Mở trong kho</button>';
       if(n.tv)acts+='<a class="btn primary" href="'+esc(n.tv)+'" target="_blank" rel="noopener">Xem toàn văn</a>';
       if(acts)h+='<div class="news-actions">'+acts+"</div>";
       h+="</article>";
       return h;
     }).join("")||'<div class="empty"><b>Không có tin nào khớp bộ lọc</b>Thử chọn loại tin khác hoặc tắt lọc “Tin quan trọng”.</div>';
-    $("newsList").querySelectorAll("[data-newsgo]").forEach(function(b){
-      b.addEventListener("click",function(){gotoDetail(b.getAttribute("data-newsgo"));});
-    });
   }
   $("newsImpChip").addEventListener("click",function(){newsImp=!newsImp;renderNewsChips();renderNews();});
   renderNewsChips();
