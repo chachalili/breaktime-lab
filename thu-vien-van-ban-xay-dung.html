@@ -758,7 +758,7 @@ $("libDotClear").addEventListener("click",function(){libDot="";renderLib();});
      ng:[["Báo Công luận","https://congluan.vn/nhung-thay-doi-dang-chu-y-trong-quy-chuan-vat-lieu-xay-dung-post365708.html"]],
      tac:["41/2026/TT-BXD","QCVN 16:2023/BXD"]},
     {so:"92/2026/VBHN-TT-BXD",ten:"Văn bản hợp nhất Thông tư ban hành QCVN 06:2022/BXD Quy chuẩn kỹ thuật quốc gia về An toàn cháy cho nhà và công trình",lt:"Hợp nhất",lvb:"Văn bản hợp nhất",cq:"Bộ Xây dựng",bh:"28/09/2026",hl:"",nt:"26/10/2026",qt:true,
-     tt:"Hợp nhất QCVN 06:2022/BXD với các lần sửa đổi, đăng Công báo số 572-VBHN ngày 26/10/2026. Nên dùng bản này khi nạp quy chuẩn an toàn cháy vào kho.",
+     tt:"Hợp nhất QCVN 06:2022/BXD với các lần sửa đổi, đăng Công báo số 572-VBHN ngày 26/10/2026.",
      dc:[],gc:"",
      tv:"https://thuvienphapluat.vn/van-ban/Xay-dung-Do-thi/Van-ban-hop-nhat-92-2026-VBHN-TT-BXD-Thong-tu-QCVN-06-2022-BXD-Quy-chuan-quoc-gia-An-toan-chay-cho-nha-728873.aspx",
      ng:[["Thư viện Pháp luật","https://thuvienphapluat.vn/van-ban/Xay-dung-Do-thi/Van-ban-hop-nhat-92-2026-VBHN-TT-BXD-Thong-tu-QCVN-06-2022-BXD-Quy-chuan-quoc-gia-An-toan-chay-cho-nha-728873.aspx"],["Công báo Chính phủ","https://congbao.chinhphu.vn/van-ban/van-ban-hop-nhat-so-92-2026-vbhn-tt-bxd-470817.htm"]],
@@ -766,7 +766,7 @@ $("libDotClear").addEventListener("click",function(){libDot="";renderLib();});
     {so:"157/VBHN-VPQH",ten:"Văn bản hợp nhất Luật Quy hoạch đô thị và nông thôn",lt:"Hợp nhất",lvb:"Văn bản hợp nhất",cq:"Văn phòng Quốc hội",bh:"",hl:"",nt:"01/10/2026",qt:true,
      tt:"Hợp nhất Luật 47/2024/QH15 với các lần sửa đổi: Luật Công nghiệp công nghệ số 71/2025/QH15 (hiệu lực 01/01/2026), Luật 144/2025/QH15 (hiệu lực 01/01/2026) và Luật 19/2026/QH16 (hiệu lực 01/03/2027).",
      dc:[],
-     gc:"Số hiệu lấy theo tên file đăng tháng 10/2026, ngày ký chưa xác minh. Nên dùng bản này khi nạp toàn văn Luật Quy hoạch đô thị và nông thôn.",
+     gc:"Số hiệu lấy theo tên file đăng tháng 10/2026, ngày ký chưa xác minh.",
      tv:"https://datafiles.chinhphu.vn/cpp/files/vbpq/2026/10/157-vbhn-vpqh.signed.pdf",
      ng:[["Cổng TTĐT Chính phủ (PDF)","https://datafiles.chinhphu.vn/cpp/files/vbpq/2026/10/157-vbhn-vpqh.signed.pdf"]],
      tac:["47/2024/QH15","144/2025/QH15","19/2026/QH16"]},
@@ -881,12 +881,71 @@ $("libDotClear").addEventListener("click",function(){libDot="";renderLib();});
     });
     var imp=$("newsImpChip"); if(imp)imp.setAttribute("aria-pressed",newsImp?"true":"false");
   }
+  function newsDateTs(s){
+    if(!s)return null;
+    s=String(s).trim();
+    if(!s)return null;
+    var m=/^(\d{1,2})\/(\d{1,2})\/(\d{4})/.exec(s);
+    if(m)return new Date(+m[3],+m[2]-1,+m[1]).getTime();
+    var m2=/^(\d{4})-(\d{2})-(\d{2})/.exec(s);
+    if(m2)return new Date(+m2[1],+m2[2]-1,+m2[3]).getTime();
+    var t=Date.parse(s);
+    return isNaN(t)?null:t;
+  }
+  /* Lọc mô tả tin ở tầng render, theo từng câu: chỉ giữ phần tóm tắt nội
+     dung liên quan đến chính văn bản; bỏ các câu (1) khuyên dùng / khuyến
+     nghị dùng văn bản ở kho thư viện và (2) ghi chú nội bộ, trạng thái xác
+     minh của người biên soạn tin. Câu nào chứa cả ý nội dung lẫn phần đuôi
+     nội bộ tách thành câu riêng thì chỉ câu nội bộ bị bỏ, ý nội dung vẫn
+     giữ nguyên. Nhờ lọc lúc hiển thị nên dữ liệu tin nạp lại hằng ngày từ
+     file .md vẫn được áp dụng đúng quy tắc này mà không cần sửa tay dữ liệu. */
+  function cleanNewsText(s){
+    if(!s)return "";
+    var drop=[
+      /* Khuyên dùng / khuyến nghị dùng ở kho thư viện */
+      /khuyên\s+dùng/i,
+      /khuyến\s+nghị\s*:?\s*(dùng|sử\s+dụng|áp\s+dụng|tra\s+cứu|tham\s+khảo)/i,
+      /nên\s+(dùng|sử\s+dụng|tra\s+cứu|tham\s+khảo|áp\s+dụng)/i,
+      /ưu\s+tiên\s+(dùng|sử\s+dụng)/i,
+      /(dùng|sử\s+dụng|tra\s+cứu|tham\s+khảo|lưu|nạp)\b[^.!?]*\b(ở|tại|trong|vào)\s+kho\b/i,
+      /nạp\b[^.!?]*\bvào\s+kho/i,
+      /kho\s+thư\s+viện/i,
+      /* Ghi chú nội bộ / trạng thái xác minh, không phải nội dung văn bản */
+      /chưa\s+xác\s+minh/i,
+      /cần\s+xác\s+minh/i,
+      /chưa\s+đọc\s+được/i,
+      /cần\s+mở\s+trang/i,
+      /lấy\s+theo\s+tên\s+file/i,
+      /theo\s+tên\s+file\s+đăng/i,
+      /link\s+toàn\s+văn\s+là/i,
+      /^\s*cần\s+đối\s+chiếu/i,
+      /cần\s+đối\s+chiếu\s+điều\s+khoản\s+thi\s+hành/i
+    ];
+    return String(s).split(/(?<=[.!?])\s+|\n+/)
+      .map(function(p){return p.trim();})
+      .filter(function(p){
+        if(!p)return false;
+        for(var i=0;i<drop.length;i++){if(drop[i].test(p))return false;}
+        return true;
+      })
+      .join(" ").replace(/\s+/g," ").trim();
+  }
   function renderNews(){
     var list=NEWS.filter(function(n){
       if(newsType&&n.lt!==newsType)return false;
       if(newsImp&&!n.qt)return false;
       return true;
     });
+    list=list.map(function(n,i){return {n:n,i:i};}).sort(function(a,b){
+      var qa=a.n.qt?1:0,qb=b.n.qt?1:0;
+      if(qa!==qb)return qb-qa;
+      var da=newsDateTs(a.n.nt),db=newsDateTs(b.n.nt);
+      if(da==null&&db==null)return a.i-b.i;
+      if(da==null)return 1;
+      if(db==null)return -1;
+      if(db!==da)return db-da;
+      return a.i-b.i;
+    }).map(function(x){return x.n;});
     $("newsList").innerHTML=list.map(function(n){
       var tgt=newsTarget(n);
       var meta=[];
@@ -900,12 +959,15 @@ $("libDotClear").addEventListener("click",function(){libDot="";renderLib();});
         +'<span class="news-so">'+esc(n.so)+'</span><span>· '+esc(n.lvb)+' · '+esc(n.cq)+"</span></div>";
       h+="<h3>"+esc(n.ten)+"</h3>";
       if(meta.length)h+='<p class="news-meta">'+esc(meta.join(" · "))+"</p>";
-      h+='<p class="news-sum">'+esc(n.tt)+"</p>";
-      if(n.dc&&n.dc.length){
-        h+='<details class="news-points"><summary>Điểm chính ('+n.dc.length+")</summary><ul>"
-          +n.dc.map(function(p){return "<li>"+esc(p)+"</li>";}).join("")+"</ul></details>";
+      var sum=cleanNewsText(n.tt);
+      if(sum)h+='<p class="news-sum">'+esc(sum)+"</p>";
+      var pts=(n.dc||[]).map(cleanNewsText).filter(function(p){return p;});
+      if(pts.length){
+        h+='<details class="news-points"><summary>Điểm chính ('+pts.length+")</summary><ul>"
+          +pts.map(function(p){return "<li>"+esc(p)+"</li>";}).join("")+"</ul></details>";
       }
-      if(n.gc)h+='<p class="news-note">'+esc(n.gc)+"</p>";
+      var note=cleanNewsText(n.gc);
+      if(note)h+='<p class="news-note">'+esc(note)+"</p>";
       if(n.ng&&n.ng.length){
         h+='<p class="news-src">Nguồn: '+n.ng.map(function(s){
           return '<a href="'+esc(s[1])+'" target="_blank" rel="noopener">'+esc(s[0])+"</a>";
